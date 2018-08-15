@@ -4,7 +4,7 @@ import { OutboundLink } from "gatsby-plugin-google-analytics"
 
 import Layout from "../components/layout"
 import presets, { colors } from "../utils/presets"
-import { rhythm } from "../utils/typography"
+import { rhythm, options } from "../utils/typography"
 import { WebpackIcon, ReactJSIcon, GraphQLIcon } from "../assets/logos"
 import { vP } from "../components/gutters"
 import Container from "../components/container"
@@ -18,6 +18,7 @@ import Diagram from "../components/diagram"
 import BlogPostPreviewItem from "../components/blog-post-preview-item"
 import FuturaParagraph from "../components/futura-paragraph"
 import CtaButton from "../components/cta-button"
+import EmailCaptureForm from "../components/email-capture-form"
 import TechWithIcon from "../components/tech-with-icon"
 
 class IndexRoute extends React.Component {
@@ -132,14 +133,7 @@ class IndexRoute extends React.Component {
                     </FuturaParagraph>
                   </Card>
 
-                  <Diagram
-                    containerCSS={{
-                      borderTopLeftRadius: 0,
-                      borderTopRightRadius: 0,
-                      flex: `1 1 100%`,
-                      borderTop: `1px solid ${colors.ui.light}`,
-                    }}
-                  />
+                  <Diagram/>
 
                   <div css={{ flex: `1 1 100%` }}>
                     <Container hasSideBar={false}>
@@ -174,11 +168,19 @@ class IndexRoute extends React.Component {
                   >
                     <Container
                       hasSideBar={false}
-                      css={{
+                      overrideCSS={{
                         maxWidth: rhythm(30),
                         paddingBottom: `0 !important`,
                       }}
                     >
+                      <EmailCaptureForm
+                        signupMessage="Want to keep up to date with the latest posts on our blog? Subscribe to our newsletter!"
+                        overrideCSS={{
+                          marginTop: 0,
+                          marginBottom: rhythm(1),
+                          border: `none`,
+                        }}
+                      />
                       <h2
                         css={{
                           textAlign: `left`,
@@ -198,12 +200,7 @@ class IndexRoute extends React.Component {
                           css={{ marginBottom: rhythm(2) }}
                         />
                       ))}
-                      <CtaButton
-                        to="/blog/"
-                        overrideCSS={{ marginBottom: rhythm(2) }}
-                      >
-                        Read More
-                      </CtaButton>
+                      <CtaButton to="/blog/" overrideCSS={{ marginBottom: rhythm(options.blockMarginBottom * 2) }}>Read More</CtaButton>
                     </Container>
                   </div>
                 </Cards>

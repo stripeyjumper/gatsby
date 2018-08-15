@@ -837,10 +837,10 @@ gatsby new my-blog https://github.com/gatsbyjs/gatsby-starter-blog#v2
   - Syntax highlighting via PrismJS
   - Styled Components
   - Pagination
- 
+
 - [lite](https://github.com/sqrthree/lite)
   [(Live demo)](https://blog.sqrtthree.com/)
- 
+
   > A clean and delicate theme for blog based on Gatsby.
 
   Features:
@@ -859,7 +859,7 @@ gatsby new my-blog https://github.com/gatsbyjs/gatsby-starter-blog#v2
 - [gatsby-universal](https://github.com/fabe/gatsby-universal)
   [(Live demo)](https://gatsby-universal.netlify.com)
 
-  An *opinionated* starter for using Gatsby v2 with React Context, tag-agnostic styled-components, page transitions, scroll events with `IntersectionObserver`. Made for state-of-the-art marketing sites.
+  An _opinionated_ starter for using Gatsby v2 with React Context, tag-agnostic styled-components, page transitions, scroll events with `IntersectionObserver`. Made for state-of-the-art marketing sites.
 
   Features:
 
@@ -875,3 +875,31 @@ gatsby new my-blog https://github.com/gatsbyjs/gatsby-starter-blog#v2
   - Manifest support
   - Sitemap support
   - [More info here](https://github.com/fabe/gatsby-universal#readme)
+  
+- [gatsby-starter-bootstrap-cv](https://github.com/mhjadav/gatsby-starter-bootstrap-cv)
+  [(Live demo)](https://elegant-hawking-bbad05.netlify.com/)
+
+  Features:
+  
+  - Designed as a minimalistic website
+  - A minimalistic card using bootstrap
+  - Font icons using `font-awesome`
+  - Google Analytics using `gatsby-plugin-google-analytics`
+  - Prerendered Open Graph tags for rich sharing
+  - Site config to add data
+  - 100% PWA (manifest.webmanifest) 
+  - Offline support, 
+  - Favicons (App favicons generator)
+  - [More info here](https://github.com/mhjadav/gatsby-starter-bootstrap-cv#gatsby-starter-bootstrap-cv)
+  
+- [gatsby-starter-kit](https://github.com/greglobinski/gatsby-starter-kit)
+  [(Docs)](https://greglobinski.github.io/gatsby-starter-kit-docs/)  
+  
+  > A set of starters for Gatsby v2
+  - Minimal
+  - Equipped
+  - Themed
+  - Website
+  - Blog
+  - more coming soon
+  

@@ -125,8 +125,8 @@ module.exports = async (
         }
       case `build-javascript`:
         return {
-          filename: `[name]-[chunkhash].js`,
-          chunkFilename: `[name]-[chunkhash].js`,
+          filename: `[name]-[contenthash].js`,
+          chunkFilename: `[name]-[contenthash].js`,
           path: directoryPath(`public`),
           publicPath: program.prefixPaths
             ? `${store.getState().config.pathPrefix}/`
@@ -188,23 +188,12 @@ module.exports = async (
 
           new FriendlyErrorsWebpackPlugin({
             clearConsole: false,
-            compilationSuccessInfo: {
-              messages: [
-                `You can now view your site in the browser running at ${
-                  program.ssl ? `https` : `http`
-                }://${program.host}:${program.port}`,
-                `Your graphql debugger is running at ${
-                  program.ssl ? `https` : `http`
-                }://${program.host}:${program.port}/___graphql`,
-              ],
-            },
           }),
         ])
         break
       case `build-javascript`: {
-        configPlugins = configPlugins.concat([
-          plugins.extractText(),
-          // Minify Javascript.
+        // Minify Javascript only if needed.
+        configPlugins = program.noUglify ? configPlugins : configPlugins.concat([
           plugins.uglify({
             uglifyOptions: {
               compress: {
@@ -212,6 +201,9 @@ module.exports = async (
               },
             },
           }),
+        ])
+        configPlugins = configPlugins.concat([
+          plugins.extractText(),
           // Write out stats object mapping named dynamic imports (aka page
           // components) to all their async chunks.
           {
@@ -290,6 +282,7 @@ module.exports = async (
       rules.yaml(),
       rules.fonts(),
       rules.images(),
+      rules.media(),
       rules.miscAssets(),
     ]
     switch (stage) {
@@ -341,15 +334,6 @@ module.exports = async (
           {
             oneOf: [rules.cssModules(), rules.css()],
           },
-
-          // Remove manually unused React Router modules. Try removing these
-          // rules whenever they get around to making a new release with their
-          // tree shaking fixes.
-          { test: /HashHistory/, use: `null-loader` },
-          { test: /MemoryHistory/, use: `null-loader` },
-          { test: /StaticRouter/, use: `null-loader` },
-          { test: /MemoryRouter/, use: `null-loader` },
-          { test: /HashRouter/, use: `null-loader` },
         ])
 
         break
@@ -377,10 +361,17 @@ module.exports = async (
         // Using directories for module resolution is mandatory because
         // relative path imports are used sometimes
         // See https://stackoverflow.com/a/49455609/6420957 for more details
+        "@babel/runtime": path.dirname(
+          require.resolve(`@babel/runtime/package.json`)
+        ),
         "core-js": path.dirname(require.resolve(`core-js/package.json`)),
         "react-hot-loader": path.dirname(
           require.resolve(`react-hot-loader/package.json`)
         ),
+        "react-lifecycles-compat": directoryPath(
+          `.cache/react-lifecycles-compat.js`
+        ),
+        "create-react-context": directoryPath(`.cache/create-react-context.js`),
       },
     }
   }
@@ -442,7 +433,51 @@ module.exports = async (
       splitChunks: {
         name: false,
       },
+      minimize: !program.noUglify,
     }
+  }
+
+  if (stage === `build-html` || stage === `develop-html`) {
+    const externalList = [
+      /^lodash/,
+      `react`,
+      /^react-dom/,
+      `pify`,
+      `@reach/router`,
+      `@reach/router/lib/history`,
+      `common-tags`,
+      `path`,
+      `semver`,
+      `react-helmet`,
+      `minimatch`,
+      `fs`,
+      /^core-js/,
+      `es6-promise`,
+      `crypto`,
+      `zlib`,
+      `http`,
+      `https`,
+      `debug`,
+    ]
+
+    config.externals = [
+      function(context, request, callback) {
+        if (
+          externalList.some(item => {
+            if (typeof item === `string` && item === request) {
+              return true
+            } else if (item instanceof RegExp && item.test(request)) {
+              return true
+            }
+
+            return false
+          })
+        ) {
+          return callback(null, `umd ${request}`)
+        }
+        return callback()
+      },
+    ]
   }
 
   store.dispatch(actions.replaceWebpackConfig(config))
